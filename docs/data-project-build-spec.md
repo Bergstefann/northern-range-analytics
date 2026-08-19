@@ -153,7 +153,14 @@ data_quality_flags
 
 `flag_type` values to use (extend if reality demands, but document why):
 `missing_year`, `unit_mismatch`, `revised_estimate`, `port_merger`, `code_change`,
-`suppressed_confidential`, `outlier_suspected`
+`outlier_suspected`
+
+~~`suppressed_confidential`~~ **dropped 2026-08-19, Phase 2.** Eurostat's JSON-stat API
+exposes no confidentiality flag at all (see `docs/data-quality-notes.md`, Finding 4) — a
+missing value can't be told apart from "confidential", "not collected", or "not
+applicable" from this API. An always-empty flag type that can never be honestly populated
+is worse than not having it, so it's removed rather than left in the enum unused. See the
+README's Data quality section for the limitation this leaves.
 
 **The `data_quality_flags` table is not optional and not decoration.** It's the cheapest,
 highest-signal part of this project. Every non-trivial data issue found during transform
