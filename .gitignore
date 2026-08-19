@@ -1,0 +1,35 @@
+# Credentials and connection strings — never commit
+.env
+credentials/
+*.pickle
+azure_sql_connection*
+
+# Raw landed data — large, regenerable from the Eurostat API, not source of truth
+data/raw/*
+!data/raw/.gitkeep
+
+# Local databases used for demo/testing
+*.db
+*.sqlite
+*.sqlite3
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+dist/
+build/
+
+# Coverage
+.coverage
+htmlcov/
+coverage.xml
+
+# Editors
+.vscode/
+.idea/
