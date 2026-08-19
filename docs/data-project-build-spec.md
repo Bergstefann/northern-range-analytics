@@ -54,14 +54,20 @@ Power BI are deliberate choices for that reason.
 
 **Primary: Eurostat maritime transport statistics.** Free, no API key, real REST API.
 
-Target datasets (verify these codes exist and match the described content before building
-against them — report if any are wrong or renamed):
-- `mar_mg_am_pwhd` — gross weight of goods handled, annual, by port
-- `mar_go_am` — goods handled by port, by direction and cargo category (this is the source
-  of the container / dry bulk / liquid bulk / ro-ro split)
+Target datasets — **corrected 2026-08-19 after live API investigation.** Neither of the
+codes originally guessed here exists; both 404 against the live API. Confirmed by fetching
+each candidate directly and checking dimension/category structure, not by search results
+alone (see `docs/data-quality-notes.md` for the full investigation):
 
-API base: `https://ec.europa.eu/eurostat/api/dissemination` — investigate the current
-statistics API format (JSON-stat is the usual response format) as your first task.
+- ~~`mar_mg_am_pwhd`~~ → **`mar_mg_aa_pwhd`** — gross weight of goods handled, annual, by
+  port, by direction (total / inwards / outwards). Note the `aa` infix, not `am`.
+- ~~`mar_go_am`~~ → **`mar_mg_am_pwhc`** — gross weight of goods handled, annual, by port,
+  by type of cargo (this is the source of the container / dry bulk / liquid bulk / ro-ro
+  split). Note the `am` infix here — inconsistent with the direction dataset's `aa`.
+
+API base: `https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/{code}` —
+confirmed JSON-stat 2.0 response format (`format=JSON&lang=EN` query params, no API key).
+Filter to specific ports by repeating `rep_mar=<code>` in the query string.
 
 **Ports to pull (five, fixed):**
 
