@@ -16,6 +16,9 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install unixODBC (required to import pyodbc)
+        run: sudo apt-get update && sudo apt-get install -y unixodbc
+
       - name: Install project and dev dependencies
         run: pip install -e . ruff mypy pytest pytest-cov types-requests
 
