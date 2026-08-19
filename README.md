@@ -61,6 +61,12 @@ existing.** Every observed gap is instead classified as `missing_year` (plain ab
 - **Units are consistent** between the two datasets actually used (both report tonnage in
   `THS_T`), though a related but unused Eurostat dataset in this family mixes units,
   keeping `unit_mismatch` a live concern for any future addition to this pipeline.
+- **A real unit bug, caught before it reached the database.** Eurostat reports `THS_T`
+  (thousand tonnes); the transform was initially passing that raw value straight into a
+  field named `gross_weight_tonnes` — a silent 1000x understatement. Building the Azure SQL
+  loader forced the check (the column name is `gross_weight_tonnes`, not
+  `gross_weight_thousand_tonnes`), and the conversion is now applied once, at the raw ->
+  domain boundary, not in the loader.
 
 Full investigation notes, including the JSON-stat index math and every design decision
 behind the transform: `docs/data-quality-notes.md`.
@@ -68,7 +74,33 @@ behind the transform: `docs/data-quality-notes.md`.
 ### Numbers, verified against the real run
 
 1,013 `port_throughput` rows, 4 `data_quality_flags` rows (1 `code_change`, 3
-`port_merger`) — from the real Phase 1 landing of `mar_mg_aa_pwhd` and `mar_mg_am_pwhc`
-for the five target ports, transformed by `src/port_analytics/transform/`. Four flags
-against a thousand rows is deliberate: every flag traces to a verified pattern in the data,
-not a speculative one.
+`port_merger`) — from the real Eurostat landing of `mar_mg_aa_pwhd` and `mar_mg_am_pwhc`
+for the five target ports, transformed and loaded into the live Azure SQL database. Four
+flags against a thousand rows is deliberate: every flag traces to a verified pattern in the
+data, not a speculative one. Confirmed idempotent by running the full pipeline twice in a
+row and checking row counts directly in the database — identical both times, 0 duplicate
+rows, 0 false-positive revisions.
+
+## Running the pipeline
+
+```
+python -m venv .venv && .venv/Scripts/activate   # or source .venv/bin/activate
+pip install -e . ruff mypy pytest pytest-cov types-requests
+cp .env.example .env   # fill in the real Azure SQL credentials
+port-analytics
+```
+
+Requires the [Microsoft ODBC Driver 18 for SQL Server](https://learn.microsoft.com/en-us/sql/connect/odbc/download-odbc-driver-for-sql-server)
+installed locally (`pyodbc` links against it). CI installs `unixodbc` on Linux for the same
+reason.
+
+## Infrastructure
+
+Azure SQL Database, free tier, **$0/month**. `rg-northern-range-analytics` /
+`northern-range-sql-server` in `australiaeast` — a new resource group and server, kept
+separate from PortYard's `rg-portyard` for clean cost tracking and teardown (a logical SQL
+server carries no cost of its own, so this costs nothing extra). Created with the
+`AutoPause` free-limit-exhaustion behavior: exceeding the monthly free allowance (100,000
+vCore-seconds / 32 GB) pauses the database until next month rather than billing. Full
+reasoning, including why a second free database is available on this subscription at all:
+`docs/data-quality-notes.md`, "Phase 3 — Azure resource decisions."

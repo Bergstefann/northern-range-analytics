@@ -1,8 +1,9 @@
-# Data quality notes — Phase 1 & 2
+# Data quality notes — Phase 1, 2 & 3
 
-Working notes from the live-API investigation and the transform build, both on 2026-08-19.
-This is the durable record of what was found and decided; `data_quality_flags` rows
-populated by the transform trace back to the findings here rather than rediscovering them.
+Working notes from the live-API investigation, the transform build, and the Azure SQL load
+— all on 2026-08-19. This is the durable record of what was found and decided;
+`data_quality_flags` rows populated by the pipeline trace back to the findings here rather
+than rediscovering them.
 
 ## Dataset codes
 
@@ -225,3 +226,70 @@ reported) where they can be compared, so this isn't hiding a known discrepancy.
 thousand rows is the "cheapest, highest-signal part of the project" the spec asks for, not
 a token gesture — every flag corresponds to a real, verified pattern in the data, not a
 speculative one.
+
+## Phase 3 — a real unit bug, caught before it reached the database
+
+While building the loader, the schema's `gross_weight_tonnes` column name forced a check
+that Phase 2's transform hadn't actually done: Eurostat reports `THS_T` (**thousand**
+tonnes), and `build_direction_rows`/`build_cargo_rows` were passing that raw value straight
+into `PortThroughputRow.gross_weight_tonnes` — a field named as if it held real tonnes, but
+actually holding thousand-tonnes, a silent 1000x understatement. Fixed at the raw -> domain
+boundary in `transform/throughput.py` (`THOUSAND_TONNES_TO_TONNES = 1000`), not in the
+loader — the load layer shouldn't need to know about source units at all. All affected
+Phase 2 test assertions were updated to match. `continuity.py` needed no change: it sums
+whatever's already in `PortThroughputRow.gross_weight_tonnes`, so it inherited the fix
+automatically once the values flowing into it were correct.
+
+This is exactly the kind of thing a schema with an honestly-named column catches — if the
+column had been left as generically named as `value`, this would have shipped silently.
+
+## Phase 3 — closing the loop on `revised_estimate`
+
+Phase 2 left `revised_estimate` in the `flag_type` enum but unpopulated, noting it needs a
+second pull to compare against. The loader now does exactly that: `port_throughput`'s
+MERGE statement (`load/upsert.py`, `build_throughput_upsert`) uses `OUTPUT $action,
+inserted.throughput_id, deleted.gross_weight_tonnes, inserted.gross_weight_tonnes` so every
+upsert reports whether it matched an existing row and, if so, the old and new value. When a
+matched row's value changed by more than a floating-point rounding tolerance (0.01 tonnes),
+`load/loader.py` emits a `revised_estimate` flag naming the port, cargo type, direction,
+year, old value, and new value. Verified with unit tests against a fake cursor
+(`tests/unit/test_loader.py`) for both the "changed" and "unchanged" cases; a real
+Eurostat revision hasn't happened between any two pulls yet, so this hasn't fired for real
+data — it will the first time Eurostat republishes a historical figure.
+
+## Phase 3 — idempotency and load, verified against the real database
+
+Ran the full `port-analytics` CLI (ingest -> transform -> load) twice in a row against the
+real free-tier Azure SQL database. Row counts after both runs, queried directly:
+
+| Table | Rows |
+|---|---|
+| `ports` | 6 |
+| `cargo_types` | 7 |
+| `port_throughput` | 1,013 |
+| `data_quality_flags` | 4 |
+
+Identical after run 1 and run 2 — no duplication. `0 revisions detected` both times, as
+expected (the underlying Eurostat data didn't change between the two runs, seconds apart).
+The self-referencing `merged_into_port_id` link resolved correctly: Antwerpen and
+Zeebrugge's rows both point at Antwerp-Bruges's `port_id`.
+
+## Phase 3 — Azure resource decisions
+
+- **Cost: $0/month.** The Azure SQL Database free offer was expanded (per Microsoft's own
+  documentation, updated 2026-08-18) from one free database per subscription to **up to 10
+  free General Purpose serverless databases per subscription**, each with its own 100,000
+  vCore-second / 32 GB monthly allowance. This project's database is the 2nd of 10 used on
+  the subscription (the 1st is PortYard's). Created with
+  `--free-limit-exhaustion-behavior AutoPause`, so exceeding the free allowance pauses the
+  database until next month rather than billing — verified after creation via `az sql db
+  show`, which reported `useFreeLimit: true` and `freeLimitExhaustionBehavior: "AutoPause"`.
+  (The locally-installed Azure CLI's `--help` text claimed the free limit was "allowed on
+  one database in a subscription" — that's stale relative to the current offer; verified
+  empirically on the actual created resource rather than trusting either source blindly.)
+- **New resource group and logical server**, not `rg-portyard`/`portyard-sql-server`.
+  `rg-northern-range-analytics` in `australiaeast` (the free offer locks every free
+  database in a subscription to one shared region, and PortYard's is already
+  `australiaeast`). A logical SQL server carries no cost of its own — only databases are
+  billed — so a dedicated server costs nothing extra and keeps this project's resources
+  cleanly separable from PortYard's for cost tracking, RBAC, and teardown.
