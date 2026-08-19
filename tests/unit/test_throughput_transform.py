@@ -87,7 +87,8 @@ def test_build_direction_rows_maps_codes_and_tags_source() -> None:
         for r in rows
         if r.port_code == "BE_0BEANR" and r.year == 2021 and r.direction == Direction.TOTAL
     )
-    assert antwerpen_total_2021.gross_weight_tonnes == 215852
+    # Eurostat reports THS_T (thousand tonnes); the domain value is real tonnes.
+    assert antwerpen_total_2021.gross_weight_tonnes == 215852 * 1000
     # BE_0BEANR and DE_1DEHAM are fully populated for both years and all
     # three directions in this fixture, so neither should be flagged.
     # (Other registered ports absent from this minimal fixture entirely
@@ -109,7 +110,7 @@ def test_build_direction_rows_filters_non_ths_t_unit() -> None:
     rows, _flags = build_direction_rows(payload)
 
     assert len(rows) == 1
-    assert rows[0].gross_weight_tonnes == 206319
+    assert rows[0].gross_weight_tonnes == 206319 * 1000
 
 
 def test_build_direction_rows_ignores_unrecognised_port_codes() -> None:
@@ -171,7 +172,7 @@ def test_build_cargo_rows_filters_non_ths_t_unit() -> None:
     rows, _flags = build_cargo_rows(payload)
 
     assert len(rows) == 1
-    assert rows[0].gross_weight_tonnes == 89729
+    assert rows[0].gross_weight_tonnes == 89729 * 1000
 
 
 def test_all_years_reads_the_time_dimension() -> None:

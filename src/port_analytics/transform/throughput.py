@@ -27,6 +27,12 @@ from port_analytics.transform.reference_data import (
 DIRECTION_DATASET_CODE = "mar_mg_aa_pwhd"
 CARGO_DATASET_CODE = "mar_mg_am_pwhc"
 
+# Eurostat reports THS_T (thousand tonnes); the schema's gross_weight_tonnes
+# column is real tonnes, so every observation is converted here, at the
+# raw -> domain boundary, rather than leaving thousand-tonnes values
+# under a misleadingly-named field for the load layer to misinterpret.
+THOUSAND_TONNES_TO_TONNES = 1000
+
 
 def build_direction_rows(
     payload: dict[str, Any],
@@ -52,7 +58,7 @@ def build_direction_rows(
                 cargo_type_code="TOTAL",
                 year=year,
                 direction=DIRECTION_CODES[direct_code],
-                gross_weight_tonnes=obs.value,
+                gross_weight_tonnes=obs.value * THOUSAND_TONNES_TO_TONNES,
                 source=DIRECTION_DATASET_CODE,
             )
         )
@@ -109,7 +115,7 @@ def build_cargo_rows(
                 cargo_type_code=cargo_code,
                 year=year,
                 direction=Direction.TOTAL,
-                gross_weight_tonnes=obs.value,
+                gross_weight_tonnes=obs.value * THOUSAND_TONNES_TO_TONNES,
                 source=CARGO_DATASET_CODE,
             )
         )
