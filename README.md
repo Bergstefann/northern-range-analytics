@@ -12,10 +12,10 @@ caught before it reached the database.
 
 ```mermaid
 flowchart LR
-    A["Eurostat REST API\nmar_mg_aa_pwhd, mar_mg_am_pwhc"] -->|"ingest/eurostat_client.py\nrequests, JSON-stat"| B[("Raw landing layer\ndata/raw/*.json, timestamped")]
-    B -->|"transform/pipeline.py\nno network access"| C["Transform\nJSON-stat decode -> domain rows\nAntwerp continuity derivation\ngap detection -> data_quality_flags"]
-    C -->|"load/loader.py\nidempotent MERGE"| D[("Azure SQL\nNorthernRangeAnalytics")]
-    D -->|"Import mode"| E["Power BI report\n4 DAX measures"]
+    A["Eurostat REST API<br/>mar_mg_aa_pwhd, mar_mg_am_pwhc"] -->|"ingest/eurostat_client.py<br/>requests, JSON-stat"| B[("Raw landing layer<br/>data/raw/*.json, timestamped")]
+    B -->|"transform/pipeline.py<br/>no network access"| C["Transform<br/>JSON-stat decode -> domain rows<br/>Antwerp continuity derivation<br/>gap detection -> data_quality_flags"]
+    C -->|"load/loader.py<br/>idempotent MERGE"| D[("Azure SQL<br/>NorthernRangeAnalytics")]
+    D -->|"Import mode"| E["Power BI report<br/>4 DAX measures"]
 ```
 
 Same structural discipline as the other two projects in this portfolio: the layer that
