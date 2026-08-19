@@ -235,7 +235,7 @@ README to the same standard as the other two repos:
 - [ ] Pipeline runs end to end, idempotently, against live Eurostat data
 - [ ] Azure SQL schema genuinely relational
 - [ ] At least 3-4 real data quality issues found, flagged in the table, and documented
-- [ ] Power BI report with the four DAX measures above, screenshotted in the README
+- [x] Power BI report with the four DAX measures above, screenshotted in the README
 - [ ] Tests on transform logic, passing, runnable without network
 - [ ] README matching PortYard and Invoicer's bar
 - [ ] Repo has a description and topics set on GitHub

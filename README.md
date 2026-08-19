@@ -261,10 +261,61 @@ wizard), and the two data-model gotchas that will silently produce wrong numbers
 missed — the multi-row-per-port-year grain, and the double-counting risk from keeping both
 the raw and derived Antwerp rows — are in `docs/power-bi-measures.md`.
 
-**Screenshots pending.** Power BI Desktop isn't available in the environment this pipeline
-was built in, so the report itself — the visuals, not the data model or measures — needs
-building in an actual Power BI Desktop session. `docs/power-bi-measures.md` has everything
-needed to reproduce it from a blank report in a few minutes.
+### Antwerp share of Northern Range %
+
+![Antwerp share of Northern Range %](powerbi/screenshots/antwerp-share-northern-range.png)
+
+*Antwerp-Bruges's share of combined Northern Range tonnage (Antwerp-Bruges + Hamburg +
+Rotterdam + Gdansk), 2005–2024.*
+
+Confirmed against the live database, replicating the `Antwerp Share of Northern Range %`
+DAX directly in SQL: share rises to 28.4% by 2008, dips to a low of 26.1% around 2012, then
+climbs steadily from 2015 onward to a two-decade high of 30.4% in 2021, and is still
+elevated at 30.2% by 2024 — a real, sustained share gain, not noise around a flat trend.
+
+### YoY tonnage growth %
+
+![YoY tonnage growth % by port](powerbi/screenshots/yoy-tonnage-growth.png)
+
+*Year-over-year tonnage growth by port, 2006–2024.*
+
+Two macro shocks are directly visible in the data, not chart artifacts. A synchronized
+negative cluster in 2009 — Antwerp-Bruges -14.5%, Antwerpen -17.0%, Hamburg -20.3%,
+Rotterdam -7.9%, Zeebrugge -2.4% — is the 2008 financial crisis working through port
+throughput with a one-year lag; Gdansk is the exception, growing +9.9% that year,
+consistent with its role in this dataset as the fast-growing outlier port. 2020 shows the
+same shape for COVID, though not universally: five of six ports declined (Antwerp-Bruges
+-2.1%, Antwerpen -3.6%, Hamburg -6.8%, Rotterdam -7.7%, Gdansk -10.9%), while Zeebrugge
+actually grew +9.4% that year — a real exception worth keeping visible rather than
+smoothing into "every port dipped."
+
+### 3-year rolling average tonnage
+
+![3-year rolling average tonnage by port](powerbi/screenshots/rolling-avg-throughput.png)
+
+*3-year rolling average tonnage by port, 2007–2024 (blank for each port's first two years —
+the DAX only averages a full 3-year window).*
+
+Antwerpen's and Zeebrugge's lines both terminate in 2021. Confirmed against the live data,
+this is the merger boundary, not a data gap: 2021 is the last year either legacy port
+reported independently before merging (`MAX(year)` = 2021 for both, 17 years of data each,
+2005–2021). The Antwerp-Bruges line runs the full 2005–2024 range without a break — the
+entire point of the continuity derivation from the Data quality section above: the merger
+boundary shows up honestly on the legacy ports' lines while the headline series stays
+continuous.
+
+### Cargo type tonnage — Antwerp-Bruges, 2024
+
+![Cargo type tonnage, Antwerp-Bruges, 2024](powerbi/screenshots/cargo-mix-2024.png)
+
+*Antwerp-Bruges's 2024 tonnage broken down by cargo type.*
+
+Containers dominate the mix at 113.7M tonnes of 244.2M total (46.5%), consistent with
+Antwerp-Bruges's real-world profile as one of Europe's major container gateways. Liquid
+bulk is a clear second at 81.4M tonnes (33.3%), reflecting the port's chemical and
+petrochemical cluster — together containers and liquid bulk account for nearly 80% of all
+tonnage, with the remainder split across Ro-Ro non-self-propelled (19.0M), dry bulk
+(14.6M), other (10.0M), and Ro-Ro self-propelled (5.5M).
 
 ## Design decisions
 
