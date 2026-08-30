@@ -181,6 +181,17 @@ separately through 2021 (confirmed directly: both present every year 2005–2021
 year 2022–2024), and the merged entity reports from 2022, with a clean cutover and no
 overlap year.
 
+```mermaid
+timeline
+    title Antwerp-Bruges: two legacy series become one
+    2005–2021 : Antwerpen and Zeebrugge report separately (real Eurostat rows, kept as-is)
+    2021 : Final independent year for either legacy port
+    2022 : Merged Antwerp-Bruges reports as one authority — clean cutover, no overlap
+    2005–2021 : Pre-2022 series derived by summing Antwerpen + Zeebrugge (derived_sum flag)
+```
+
+![Antwerp-Bruges: two legacy series become one — Antwerpen and Zeebrugge report separately through 2021, the merged authority reports from 2022, and the pre-2022 combined series is derived by summation](docs/images/antwerp-bruges-merger-timeline.png)
+
 **Decision: keep both views, explicitly, every derived row flagged.** The raw Antwerpen and
 Zeebrugge rows are kept untouched under their own port codes, sourced from the real Eurostat
 datasets. In addition, a continuous pre-2022 Antwerp-Bruges series is derived by summing the
@@ -268,6 +279,13 @@ and derived Antwerp rows) are in `docs/power-bi-measures.md`.
 
 *Antwerp-Bruges's share of combined Northern Range tonnage (Antwerp-Bruges + Hamburg +
 Rotterdam + Gdansk), 2005–2024.*
+
+Zeebrugge isn't a separate denominator line item because it's already inside Antwerp-Bruges
+for every year this chart covers. The intro lists it among the rivals, but the merged
+authority reports Antwerp and Zeebrugge as one port from 2022, and the pre-2022
+Antwerp-Bruges series is derived by summing the two legacy ports (see "The Antwerp
+continuity decision" above). Counting Zeebrugge as its own member of the Northern Range
+would double-count it.
 
 Confirmed against the live database, replicating the `Antwerp Share of Northern Range %`
 DAX directly in SQL: share rises to 28.4% by 2008, dips to a low of 26.1% around 2012, then

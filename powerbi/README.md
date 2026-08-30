@@ -10,5 +10,5 @@ Desktop builds it:
   `docs/power-bi-measures.md` for why this repo doesn't ship a hand-authored `.pbip`
   project instead: a `.pbix` can only be produced by Power BI Desktop, and a project file
   no one can open and validate is worse than clear instructions.
-- `screenshots/`, the visuals referenced from the main README's Power BI section, once
-  captured.
+- `screenshots/`, the visuals referenced from the main README's Power BI section (already
+  captured — embedded in the README).

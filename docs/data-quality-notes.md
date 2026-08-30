@@ -5,6 +5,18 @@ all on 2026-08-19. This is the durable record of what was found and decided.
 `data_quality_flags` rows populated by the pipeline trace back to the findings here rather
 than rediscovering them.
 
+Findings at a glance (details in each section below):
+
+| # | Finding | Mechanism / flag | Decision | Status |
+|---|---|---|---|---|
+| 1 | Port merger breaks the Antwerp-Bruges series | `port_merger` | Keep both views; derive pre-2022 series by summing the legacy ports | Live — 3 flags in DB |
+| 2 | Phantom `UNK` cargo category (zero data everywhere) | none | Exclude from `CARGO_TYPES`; no flag row (nothing to point at) | Live |
+| 3 | Hamburg `RO_MNSP` stops cleanly after 2011 | `code_change` | One flag for the contiguous cutoff, not thirteen `missing_year` rows | Live — 1 flag |
+| 4 | No confidentiality flag exposed by this API | `suppressed_confidential` dropped | Delete from the enum; gaps become `missing_year`/`code_change` | Closed — removed |
+| 5 | Units consistent (`THS_T`) but not universal | `unit_mismatch` (kept, dormant) | Flag stays in the enum; no occurrence this run | Dormant |
+| — | 1000× thousand-tonnes bug (Phase 3) | schema named `gross_weight_tonnes` | Fixed at the raw→domain boundary | Fixed |
+| — | `revised_estimate` loop-closure (Phase 3) | `revised_estimate` (dormant) | Loader compares old/new via MERGE `OUTPUT` | Built, no occurrence |
+
 ## Dataset codes
 
 The build spec originally listed `mar_mg_am_pwhd` and `mar_go_am`. Both 404 against the live

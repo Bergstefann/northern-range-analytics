@@ -79,6 +79,28 @@ sums across *all* of those, total and breakdown and directional rows together, a
 overcounts. Every measure below that wants "total tonnage for a port-year" filters to
 `cargo_type_code = 'TOTAL'` and `direction = 'total'` specifically.
 
+**What that means for one port-year.** A single (port, year) like Antwerp-Bruges 2024
+expands to nine rows: one `TOTAL` row per direction (`total`, `inbound`, `outbound`) plus
+six cargo-breakdown rows at `direction = 'total'` (2024 figures from the README's
+cargo-mix section):
+
+| cargo_type_code | direction | gross_weight_tonnes |
+|---|---|---|
+| `TOTAL` | `total` | 244.2M |
+| `TOTAL` | `inbound` | (part of the yearly total) |
+| `TOTAL` | `outbound` | (part of the yearly total) |
+| `LBK` (liquid bulk) | `total` | 81.4M |
+| `DBK` (dry bulk) | `total` | 14.6M |
+| `LCNT` (containers) | `total` | 113.7M |
+| `RO_MSP` (ro-ro self-propelled) | `total` | 5.5M |
+| `RO_MNSP` (ro-ro non-self) | `total` | 19.0M |
+| `OTH` (other) | `total` | 10.0M |
+
+An unfiltered `SUM(port_throughput[gross_weight_tonnes])` over that single port-year adds
+all nine rows — the six breakdowns alone sum to 244.2M, on top of the `TOTAL` rows — so
+the result roughly doubles the true 244.2M total. That's the silent overcount the measures
+filter away.
+
 **Second gotcha, and the more dangerous one:** because of the Antwerp continuity decision
 (see `docs/data-quality-notes.md`), `ports` has 6 rows but only 4 are independent.
 Antwerpen and Zeebrugge's tonnage for 2005–2021 is *also* included in Antwerp-Bruges's
