@@ -306,7 +306,7 @@ entire point of the continuity derivation from the Data quality section above: t
 boundary shows up honestly on the legacy ports' lines while the headline series stays
 continuous.
 
-### Cargo type tonnage — Antwerp-Bruges, 2024
+### Cargo type tonnage: Antwerp-Bruges, 2024
 
 ![Cargo type tonnage, Antwerp-Bruges, 2024](powerbi/screenshots/cargo-mix-2024.png)
 

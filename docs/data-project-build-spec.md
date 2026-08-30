@@ -170,7 +170,7 @@ gets a row. This is what turns "I cleaned the data" into something queryable and
 
 ## 5. Build phases
 
-### Phase 1 — Ingestion and landing
+### Phase 1: Ingestion and landing
 
 - Investigate the Eurostat API properly first. Confirm the endpoint format, the response
   shape (JSON-stat?), how to filter by port and year, and what the dataset codes actually
@@ -186,7 +186,7 @@ gets a row. This is what turns "I cleaned the data" into something queryable and
 and ports you got, and every data oddity you noticed. Do not proceed to Phase 2 without
 this checkpoint.
 
-### Phase 2 — Transform and document the mess
+### Phase 2: Transform and document the mess
 
 - Transform raw → the schema above.
 - Handle the real inconsistencies. Expect: the Antwerp/Zeebrugge merger, missing years for
@@ -198,7 +198,7 @@ this checkpoint.
 - **Write the data-quality findings up as you go**, not retroactively. This becomes the
   README's strongest section (it's the equivalent of Invoicer's postmortem in spirit).
 
-### Phase 3 — Load and orchestration
+### Phase 3: Load and orchestration
 
 - Load into Azure SQL.
 - **Idempotent.** Re-running the pipeline must not duplicate rows. Carry over the same
@@ -213,7 +213,7 @@ this checkpoint.
 create a separate one. **Ask before creating anything with a cost implication, and state
 expected cost before doing so.** Free tier only.
 
-### Phase 4 — Power BI and README
+### Phase 4: Power BI and README
 
 Power BI report with real DAX measures, not dragged-in fields:
 - YoY tonnage growth % by port

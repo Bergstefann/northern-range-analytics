@@ -1,4 +1,4 @@
-# Data quality notes — Phase 1, 2 & 3
+# Data quality notes: Phase 1, 2 & 3
 
 Working notes from the live-API investigation, the transform build, and the Azure SQL load,
 all on 2026-08-19. This is the durable record of what was found and decided.
@@ -40,7 +40,7 @@ All 5 target ports are covered, but Antwerp requires 3 codes because of the 2022
 | `NL_0NLRTM` | Rotterdam | Full 2005–2024 coverage |
 | `PL_0PLGDN` | Gdansk | Full 2005–2024 coverage |
 
-## Finding 1 — port merger breaks the Antwerp-Bruges time series (`port_merger`)
+## Finding 1: port merger breaks the Antwerp-Bruges time series (`port_merger`)
 
 Confirmed directly, not inferred, by checking per-year presence of `BE_0BE003` /
 `BE_0BEANR` / `BE_0BEZEE` in the `value` map:
@@ -59,7 +59,7 @@ Sanity check on magnitude: Antwerpen 2021 (215,852) + Zeebrugge 2021 (40,130) = 
 thousand tonnes, vs. Antwerp-Bruges 2022 (254,257). Consistent scale, which supports treating
 these as the same underlying port complex across the cutover.
 
-## Antwerp continuity decision (Phase 2) — the most important decision in this project
+## Antwerp continuity decision (Phase 2): the most important decision in this project
 
 Three options were on the table for pre-2022 Antwerp-Bruges: sum the legacy codes, keep
 them separate, or both. **Decision: both, explicitly, with every derived row flagged.**
@@ -107,7 +107,7 @@ share of Northern Range volume" measure, Phase 4) must query `port_id=BE_0BE003`
 transparently get the derived rows pre-2022 and the real rows post-2022. The `source`
 column is what lets a consumer tell them apart if they need to.
 
-## Finding 2 — phantom `UNK` cargo category (`outlier_suspected` or a new flag type)
+## Finding 2: phantom `UNK` cargo category (`outlier_suspected` or a new flag type)
 
 The cargo dataset's `cargo` dimension includes a category `UNK` ("Unknown"), but it has
 **zero data points across every port and every year**, confirmed via the API's own
@@ -121,7 +121,7 @@ transform's cargo-code allowlist means it's silently skipped if it ever appeared
 `data_quality_flags` row either: there's no missing row to point at, since the category
 never produces rows for anyone. Documented here instead.
 
-## Finding 3 — Hamburg's `RO_MNSP` reporting stops cleanly after 2011 (`code_change`)
+## Finding 3: Hamburg's `RO_MNSP` reporting stops cleanly after 2011 (`code_change`)
 
 **Corrected from the original Phase 1 note**, which only sampled 2019+ and concluded
 Hamburg had zero `RO_MNSP` (non-self-propelled Ro-Ro) rows for all 20 years. The full
@@ -137,7 +137,7 @@ non-reporting. The actual cause still can't be confirmed from the API alone
 (reclassification into another category vs. genuine cessation of the traffic type), and the
 flag says so rather than guessing.
 
-## Finding 4 — no confidentiality flag is exposed in this API format
+## Finding 4: no confidentiality flag is exposed in this API format
 
 Eurostat's JSON-stat 2.0 response has no `status` key (checked: not present at top level,
 not present per-dimension, not present per-value). The only flag-like signal is
@@ -163,7 +163,7 @@ silently suppressing a confidential figure for one of these ports, this pipeline
 tell that apart from the figure simply not existing.** Documented here and in the README's
 Data quality section so it isn't lost.
 
-## Finding 5 — units are consistent between the two datasets we use, but not universally
+## Finding 5: units are consistent between the two datasets we use, but not universally
 
 Both target datasets report the tonnage figure in `THS_T` (thousand tonnes):
 - `mar_mg_aa_pwhd` units: `THS_T`, `RT_PRE` (growth rate on previous period)
@@ -227,7 +227,7 @@ thousand rows is the "cheapest, highest-signal part of the project" the spec ask
 a token gesture. Every flag corresponds to a real, verified pattern in the data, not a
 speculative one.
 
-## Phase 3 — a real unit bug, caught before it reached the database
+## Phase 3: a real unit bug, caught before it reached the database
 
 While building the loader, the schema's `gross_weight_tonnes` column name forced a check
 that Phase 2's transform hadn't actually done. Eurostat reports `THS_T` (**thousand**
@@ -243,7 +243,7 @@ fix automatically once the values flowing into it were correct.
 This is exactly the kind of thing a schema with an honestly-named column catches. If the
 column had been left as generically named as `value`, this would have shipped silently.
 
-## Phase 3 — closing the loop on `revised_estimate`
+## Phase 3: closing the loop on `revised_estimate`
 
 Phase 2 left `revised_estimate` in the `flag_type` enum but unpopulated, noting it needs a
 second pull to compare against. The loader now does exactly that. `port_throughput`'s
@@ -257,7 +257,7 @@ year, old value, and new value. Verified with unit tests against a fake cursor
 Eurostat revision hasn't happened between any two pulls yet, so this hasn't fired for real
 data. It will the first time Eurostat republishes a historical figure.
 
-## Phase 3 — idempotency and load, verified against the real database
+## Phase 3: idempotency and load, verified against the real database
 
 Ran the full `port-analytics` CLI (ingest -> transform -> load) twice in a row against the
 real free-tier Azure SQL database. Row counts after both runs, queried directly:
@@ -274,7 +274,7 @@ expected: the underlying Eurostat data didn't change between the two runs, secon
 The self-referencing `merged_into_port_id` link resolved correctly, with Antwerpen and
 Zeebrugge's rows both pointing at Antwerp-Bruges's `port_id`.
 
-## Phase 3 — Azure resource decisions
+## Phase 3: Azure resource decisions
 
 - **Cost: $0/month.** The Azure SQL Database free offer was expanded (per Microsoft's own
   documentation, updated 2026-08-18) from one free database per subscription to **up to 10

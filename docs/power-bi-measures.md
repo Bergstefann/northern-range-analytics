@@ -177,7 +177,7 @@ the sum of the others. Use in a table with `cargo_types[cargo_type_name]` on row
 port and year selected via slicers. It ranks which cargo type (containers, dry bulk, liquid
 bulk, either Ro-Ro type, other) dominates that port's mix that year.
 
-## 4. Antwerp's share of total Northern Range volume — the headline measure
+## 4. Antwerp's share of total Northern Range volume: the headline measure
 
 ```dax
 Northern Range Total Tonnage =
