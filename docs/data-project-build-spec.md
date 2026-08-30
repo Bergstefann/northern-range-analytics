@@ -13,13 +13,13 @@ deviating on anything marked as a decision.
 
 - **No `Co-Authored-By` trailers on any commit.** Not on the first commit, not on any commit.
 - Conventional-commit messages throughout (`feat:`, `fix:`, `test:`, `docs:`, `ci:`, `chore:`).
-  Small, logical commits as you go — not one giant dump at the end.
+  Small, logical commits as you go, not one giant dump at the end.
 - No secrets in git, ever. Connection strings and any credentials go in environment variables
   or user-secrets equivalents. `.gitignore` configured before the first commit lands.
 - Tests are not optional and not a coverage-number exercise. They exist to prove the transform
   logic is correct.
 - If something in this spec turns out to be wrong when you hit reality (an API endpoint has
-  changed, a dataset code doesn't exist, a table has different columns than assumed) — **stop
+  changed, a dataset code doesn't exist, a table has different columns than assumed), **stop
   and report it rather than silently working around it.** The spec is a plan, not a
   guarantee about the outside world.
 - Time box: this is scoped at 3-4 weeks of evenings. If scope starts growing, flag it.
@@ -54,18 +54,18 @@ Power BI are deliberate choices for that reason.
 
 **Primary: Eurostat maritime transport statistics.** Free, no API key, real REST API.
 
-Target datasets — **corrected 2026-08-19 after live API investigation.** Neither of the
+Target datasets, **corrected 2026-08-19 after live API investigation.** Neither of the
 codes originally guessed here exists; both 404 against the live API. Confirmed by fetching
 each candidate directly and checking dimension/category structure, not by search results
 alone (see `docs/data-quality-notes.md` for the full investigation):
 
-- ~~`mar_mg_am_pwhd`~~ → **`mar_mg_aa_pwhd`** — gross weight of goods handled, annual, by
+- ~~`mar_mg_am_pwhd`~~ → **`mar_mg_aa_pwhd`**, gross weight of goods handled, annual, by
   port, by direction (total / inwards / outwards). Note the `aa` infix, not `am`.
-- ~~`mar_go_am`~~ → **`mar_mg_am_pwhc`** — gross weight of goods handled, annual, by port,
+- ~~`mar_go_am`~~ → **`mar_mg_am_pwhc`**, gross weight of goods handled, annual, by port,
   by type of cargo (this is the source of the container / dry bulk / liquid bulk / ro-ro
-  split). Note the `am` infix here — inconsistent with the direction dataset's `aa`.
+  split). Note the `am` infix here, inconsistent with the direction dataset's `aa`.
 
-API base: `https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/{code}` —
+API base: `https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/{code}`,
 confirmed JSON-stat 2.0 response format (`format=JSON&lang=EN` query params, no API key).
 Filter to specific ports by repeating `rep_mar=<code>` in the query string.
 
@@ -76,7 +76,7 @@ Filter to specific ports by repeating `rep_mar=<code>` in the query string.
 | Antwerp-Bruges | BE | The subject |
 | Rotterdam | NL | Largest Northern Range rival |
 | Hamburg | DE | Third major Northern Range player |
-| Zeebrugge | BE | Belgian, but ro-ro heavy — different profile to Antwerp |
+| Zeebrugge | BE | Belgian, but ro-ro heavy, a different profile to Antwerp |
 | Gdansk | PL | Fast-growing outlier for contrast |
 
 Note: Antwerp and Zeebrugge merged into "Port of Antwerp-Bruges" in 2022. Eurostat's
@@ -109,7 +109,7 @@ Eurostat REST API
 Mirror the structural discipline from the other two repos: a clear separation between the
 layer that talks to the outside world and the layer that holds business logic, so the
 transform logic is testable without network access. Invoicer's ports-and-adapters pattern
-is the reference — do the equivalent here, appropriately scaled (this is simpler than
+is the reference. Do the equivalent here, appropriately scaled (this is simpler than
 Invoicer; don't over-engineer it into three abstraction layers it doesn't need).
 
 ---
@@ -156,7 +156,7 @@ data_quality_flags
 `outlier_suspected`
 
 ~~`suppressed_confidential`~~ **dropped 2026-08-19, Phase 2.** Eurostat's JSON-stat API
-exposes no confidentiality flag at all (see `docs/data-quality-notes.md`, Finding 4) — a
+exposes no confidentiality flag at all (see `docs/data-quality-notes.md`, Finding 4). A
 missing value can't be told apart from "confidential", "not collected", or "not
 applicable" from this API. An always-empty flag type that can never be honestly populated
 is worse than not having it, so it's removed rather than left in the enum unused. See the
@@ -170,7 +170,7 @@ gets a row. This is what turns "I cleaned the data" into something queryable and
 
 ## 5. Build phases
 
-### Phase 1 — Ingestion and landing
+### Phase 1: Ingestion and landing
 
 - Investigate the Eurostat API properly first. Confirm the endpoint format, the response
   shape (JSON-stat?), how to filter by port and year, and what the dataset codes actually
@@ -186,46 +186,47 @@ gets a row. This is what turns "I cleaned the data" into something queryable and
 and ports you got, and every data oddity you noticed. Do not proceed to Phase 2 without
 this checkpoint.
 
-### Phase 2 — Transform and document the mess
+### Phase 2: Transform and document the mess
 
 - Transform raw → the schema above.
 - Handle the real inconsistencies. Expect: the Antwerp/Zeebrugge merger, missing years for
   some port/cargo combinations, suppressed values (Eurostat marks confidential figures),
   unit inconsistencies, and revised historical figures.
 - Populate `data_quality_flags` for everything non-trivial.
-- Unit tests on transform logic — same standard as the other two repos. No network access
-  required to run them.
+- Unit tests on transform logic, to the same standard as the other two repos. No network
+  access required to run them.
 - **Write the data-quality findings up as you go**, not retroactively. This becomes the
   README's strongest section (it's the equivalent of Invoicer's postmortem in spirit).
 
-### Phase 3 — Load and orchestration
+### Phase 3: Load and orchestration
 
 - Load into Azure SQL.
 - **Idempotent.** Re-running the pipeline must not duplicate rows. Carry over the same
   discipline Invoicer already demonstrates.
 - Single clear entrypoint (CLI) that runs ingest → transform → load.
 - Optional if time allows, not required: a scheduled run (GitHub Actions is fine and
-  cheaper than an Azure Function here — Invoicer's README already explains that tradeoff).
+  cheaper than an Azure Function here, and Invoicer's README already explains that
+  tradeoff).
 
 **Note on Azure:** an Azure subscription already exists (free tier, resource group
 `rg-portyard` in `australiaeast`). Either add a database to the existing SQL server or
-create a separate one — **ask before creating anything with a cost implication, and state
+create a separate one. **Ask before creating anything with a cost implication, and state
 expected cost before doing so.** Free tier only.
 
-### Phase 4 — Power BI and README
+### Phase 4: Power BI and README
 
 Power BI report with real DAX measures, not dragged-in fields:
 - YoY tonnage growth % by port
 - 3-year rolling average throughput
 - Rank by cargo type per year
-- **Antwerp's share of total Northern Range volume** — this is the headline visual
+- **Antwerp's share of total Northern Range volume**, the headline visual
 
 README to the same standard as the other two repos:
-- Accurate claims (test counts, row counts — verify before writing them down)
+- Accurate claims (test counts, row counts; verify before writing them down)
 - Architecture diagram and data model diagram (Mermaid)
 - A **Data quality** section documenting what was found and how it was handled
 - A design-decisions section covering the real tradeoffs made
-- Screenshots of the Power BI report (essential — nobody will open a .pbix file)
+- Screenshots of the Power BI report (essential, since nobody will open a .pbix file)
 - Working links, no placeholders, no `USERNAME` in badge URLs
 
 ---
@@ -256,7 +257,7 @@ Everything in this spec serves producing that sentence honestly.
 - No live AIS ingestion
 - No third data source
 - Don't skip `data_quality_flags` to save time
-- Don't let Power BI polish eat Phase 2's time — the schema and data-quality work is what a
+- Don't let Power BI polish eat Phase 2's time. The schema and data-quality work is what a
   technical interviewer will probe
 - Don't over-abstract. This is simpler than Invoicer; it doesn't need Invoicer's full
   provider-protocol structure, just the testability that structure bought.
