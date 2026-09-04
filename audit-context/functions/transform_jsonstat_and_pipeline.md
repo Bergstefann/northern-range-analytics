@@ -124,9 +124,7 @@ for flat_index_str, value in value_map.items():
     for dim_id, stride in zip(dimension_ids, strides, strict=True):
         position, remainder = remainder // stride, remainder % stride
         dimension_values[dim_id] = codes_by_dimension[dim_id][position]
-    observations.append(
-        JsonStatObservation(dimension_values=dimension_values, value=float(value))
-    )
+    observations.append(JsonStatObservation(dimension_values=dimension_values, value=float(value)))
 ```
 - **What:** For every present flat index, decodes it into a per-dimension code dict and
   builds one `JsonStatObservation`.

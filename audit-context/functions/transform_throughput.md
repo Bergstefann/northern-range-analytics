@@ -133,8 +133,12 @@ for port_code in PORTS:
     for direct_code, direction in DIRECTION_CODES.items():
         flags.extend(
             _gap_flags(
-                port_code, "TOTAL", direction, eligible,
-                presence[(port_code, direct_code)], DIRECTION_DATASET_CODE,
+                port_code,
+                "TOTAL",
+                direction,
+                eligible,
+                presence[(port_code, direct_code)],
+                DIRECTION_DATASET_CODE,
             )
         )
 ```
@@ -261,7 +265,9 @@ if port_code not in PORTS or cargo_code not in cargo_codes:
 # L112-L122
 rows.append(
     PortThroughputRow(
-        port_code=port_code, cargo_type_code=cargo_code, year=year,
+        port_code=port_code,
+        cargo_type_code=cargo_code,
+        year=year,
         direction=Direction.TOTAL,
         gross_weight_tonnes=obs.value * THOUSAND_TONNES_TO_TONNES,
         source=CARGO_DATASET_CODE,
@@ -281,8 +287,14 @@ for port_code in PORTS:
     eligible = _eligible_years(port_code, all_years)
     for cargo_code in cargo_codes:
         flags.extend(
-            _gap_flags(port_code, cargo_code, Direction.TOTAL, eligible,
-                       presence[(port_code, cargo_code)], CARGO_DATASET_CODE)
+            _gap_flags(
+                port_code,
+                cargo_code,
+                Direction.TOTAL,
+                eligible,
+                presence[(port_code, cargo_code)],
+                CARGO_DATASET_CODE,
+            )
         )
 ```
 - **What:** Exhaustive `PORTS × cargo_codes` gap-flag matrix, mirroring

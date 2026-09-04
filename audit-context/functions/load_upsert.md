@@ -366,10 +366,18 @@ OUTPUT
 ```python
 # L107-120
 params = (
-    port_id, cargo_type_id, row.year, row.direction.value, row.source,
+    port_id,
+    cargo_type_id,
+    row.year,
+    row.direction.value,
+    row.source,
     row.gross_weight_tonnes,
-    port_id, cargo_type_id, row.year, row.direction.value,
-    row.gross_weight_tonnes, row.source,
+    port_id,
+    cargo_type_id,
+    row.year,
+    row.direction.value,
+    row.gross_weight_tonnes,
+    row.source,
 )
 ```
 - **What:** 12-tuple. Positions 1-5 feed the `USING` clause; position 6
@@ -488,8 +496,14 @@ WHEN NOT MATCHED THEN
 ```python
 # L148-158
 params = (
-    throughput_id, port_id, flag.flag_type.value, flag.description,
-    throughput_id, port_id, flag.flag_type.value, flag.description,
+    throughput_id,
+    port_id,
+    flag.flag_type.value,
+    flag.description,
+    throughput_id,
+    port_id,
+    flag.flag_type.value,
+    flag.description,
     flag.resolution,
 )
 ```

@@ -86,7 +86,12 @@ PORTS: dict[str, Port] = {
 # L38-46
 CARGO_TYPES: dict[str, CargoType] = {
     "TOTAL": CargoType(cargo_type_code="TOTAL", cargo_type_name="Total (all cargo)"),
-    "LBK": ..., "DBK": ..., "LCNT": ..., "RO_MSP": ..., "RO_MNSP": ..., "OTH": ...,
+    "LBK": ...,
+    "DBK": ...,
+    "LCNT": ...,
+    "RO_MSP": ...,
+    "RO_MNSP": ...,
+    "OTH": ...,
 }
 ```
 - **What:** Declares the fixed cargo-type universe, including a cargo type (`TOTAL`) that does not correspond

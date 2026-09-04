@@ -151,8 +151,7 @@ try:
     validated = JsonStatDataset.model_validate(payload)
 except ValidationError as exc:
     raise EurostatAPIError(
-        f"Eurostat response for {dataset_code} did not match the expected "
-        f"JSON-stat shape: {exc}"
+        f"Eurostat response for {dataset_code} did not match the expected JSON-stat shape: {exc}"
     ) from exc
 ```
 - **What:** Structurally validates `payload` against `JsonStatDataset` (see Cross-Function

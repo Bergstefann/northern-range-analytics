@@ -72,9 +72,7 @@ landed_paths = pull_and_land(landing_dir=landing_dir)
 # L30-37
 payloads = {
     dataset_code: json.loads(
-        next(p for p in landed_paths if p.name.startswith(dataset_code)).read_text(
-            encoding="utf-8"
-        )
+        next(p for p in landed_paths if p.name.startswith(dataset_code)).read_text(encoding="utf-8")
     )
     for dataset_code in DATASET_CODES.values()
 }
