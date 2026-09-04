@@ -17,6 +17,8 @@ Findings at a glance (details in each section below):
 | — | 1000× thousand-tonnes bug (Phase 3) | schema named `gross_weight_tonnes` | Fixed at the raw→domain boundary | Fixed |
 | — | `revised_estimate` loop-closure (Phase 3) | `revised_estimate` (dormant) | Loader compares old/new via MERGE `OUTPUT` | Built, no occurrence |
 
+![Data quality findings — five row-level findings from the live-API investigation (port merger, phantom UNK cargo, Hamburg RO_MNSP cutoff, no confidentiality flag, inconsistent units) plus two schema-level Phase 3 items below the line (thousand-tonnes scale bug, revised-estimate loop closure)](images/data-quality-findings-matrix.png)
+
 ## Dataset codes
 
 The build spec originally listed `mar_mg_am_pwhd` and `mar_go_am`. Both 404 against the live
