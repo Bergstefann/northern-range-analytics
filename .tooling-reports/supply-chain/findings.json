@@ -1,0 +1,885 @@
+{
+  "coverage": {
+    "criteria": {
+      "advisories": {
+        "assessed_clean": 10,
+        "assessed_flagged": 0,
+        "unassessable": 0
+      },
+      "archived": {
+        "assessed_clean": 10,
+        "assessed_flagged": 0,
+        "unassessable": 0
+      },
+      "binary_artifacts": {
+        "assessed_clean": 0,
+        "assessed_flagged": 0,
+        "unassessable": 10
+      },
+      "code_review": {
+        "assessed_clean": 0,
+        "assessed_flagged": 0,
+        "unassessable": 10
+      },
+      "dangerous_workflow": {
+        "assessed_clean": 0,
+        "assessed_flagged": 0,
+        "unassessable": 10
+      },
+      "deprecated": {
+        "assessed_clean": 10,
+        "assessed_flagged": 0,
+        "unassessable": 0
+      },
+      "downloads": {
+        "assessed_clean": 0,
+        "assessed_flagged": 0,
+        "unassessable": 10
+      },
+      "install_script": {
+        "assessed_clean": 0,
+        "assessed_flagged": 0,
+        "unassessable": 10
+      },
+      "provenance": {
+        "assessed_clean": 0,
+        "assessed_flagged": 0,
+        "unassessable": 10
+      },
+      "publisher_concentration": {
+        "assessed_clean": 0,
+        "assessed_flagged": 0,
+        "unassessable": 10
+      },
+      "security_policy": {
+        "assessed_clean": 10,
+        "assessed_flagged": 0,
+        "unassessable": 0
+      },
+      "staleness": {
+        "assessed_clean": 10,
+        "assessed_flagged": 0,
+        "unassessable": 0
+      },
+      "token_permissions": {
+        "assessed_clean": 0,
+        "assessed_flagged": 0,
+        "unassessable": 10
+      }
+    },
+    "total_dependencies": 10
+  },
+  "dependencies": [
+    {
+      "dev": true,
+      "ecosystem": "PyPI",
+      "exists": true,
+      "flagged": [],
+      "name": "mypy",
+      "non_registry_reason": null,
+      "repo": "github.com/python/mypy",
+      "signals": {
+        "advisories": {
+          "detail": "no advisories recorded",
+          "state": "assessed_clean",
+          "value": []
+        },
+        "archived": {
+          "detail": "repository is active",
+          "state": "assessed_clean",
+          "value": false
+        },
+        "binary_artifacts": {
+          "detail": "the Scorecard API did not answer",
+          "state": "unassessable",
+          "value": null
+        },
+        "code_review": {
+          "detail": "the Scorecard API did not answer",
+          "state": "unassessable",
+          "value": null
+        },
+        "dangerous_workflow": {
+          "detail": "the Scorecard API did not answer",
+          "state": "unassessable",
+          "value": null
+        },
+        "deprecated": {
+          "detail": "release 2.3.1 is not yanked",
+          "state": "assessed_clean",
+          "value": false
+        },
+        "downloads": {
+          "detail": "PyPI's download counters are disabled and return -1",
+          "state": "unassessable",
+          "value": null
+        },
+        "install_script": {
+          "detail": "install-time execution depends on whether a wheel or an sdist is installed, which this collector does not determine",
+          "state": "unassessable",
+          "value": null
+        },
+        "provenance": {
+          "detail": "PyPI publish attestations are not read by this collector",
+          "state": "unassessable",
+          "value": null
+        },
+        "publisher_concentration": {
+          "detail": "PyPI publishes no upload ACL, so who can publish this package is not observable",
+          "state": "unassessable",
+          "value": null
+        },
+        "security_policy": {
+          "detail": "publishes a security policy",
+          "state": "assessed_clean",
+          "value": true
+        },
+        "staleness": {
+          "detail": "pushed 1 days ago",
+          "state": "assessed_clean",
+          "value": "2026-08-28T01:13:53Z"
+        },
+        "token_permissions": {
+          "detail": "the Scorecard API did not answer",
+          "state": "unassessable",
+          "value": null
+        }
+      },
+      "version": "2.3.1",
+      "version_source": "latest-release"
+    },
+    {
+      "dev": false,
+      "ecosystem": "PyPI",
+      "exists": true,
+      "flagged": [],
+      "name": "pydantic",
+      "non_registry_reason": null,
+      "repo": "github.com/pydantic/pydantic",
+      "signals": {
+        "advisories": {
+          "detail": "no advisories recorded",
+          "state": "assessed_clean",
+          "value": []
+        },
+        "archived": {
+          "detail": "repository is active",
+          "state": "assessed_clean",
+          "value": false
+        },
+        "binary_artifacts": {
+          "detail": "the Scorecard API did not answer",
+          "state": "unassessable",
+          "value": null
+        },
+        "code_review": {
+          "detail": "the Scorecard API did not answer",
+          "state": "unassessable",
+          "value": null
+        },
+        "dangerous_workflow": {
+          "detail": "the Scorecard API did not answer",
+          "state": "unassessable",
+          "value": null
+        },
+        "deprecated": {
+          "detail": "release 2.13.5 is not yanked",
+          "state": "assessed_clean",
+          "value": false
+        },
+        "downloads": {
+          "detail": "PyPI's download counters are disabled and return -1",
+          "state": "unassessable",
+          "value": null
+        },
+        "install_script": {
+          "detail": "install-time execution depends on whether a wheel or an sdist is installed, which this collector does not determine",
+          "state": "unassessable",
+          "value": null
+        },
+        "provenance": {
+          "detail": "PyPI publish attestations are not read by this collector",
+          "state": "unassessable",
+          "value": null
+        },
+        "publisher_concentration": {
+          "detail": "PyPI publishes no upload ACL, so who can publish this package is not observable",
+          "state": "unassessable",
+          "value": null
+        },
+        "security_policy": {
+          "detail": "publishes a security policy",
+          "state": "assessed_clean",
+          "value": true
+        },
+        "staleness": {
+          "detail": "pushed 0 days ago",
+          "state": "assessed_clean",
+          "value": "2026-08-29T09:34:40Z"
+        },
+        "token_permissions": {
+          "detail": "the Scorecard API did not answer",
+          "state": "unassessable",
+          "value": null
+        }
+      },
+      "version": "2.13.5",
+      "version_source": "latest-release"
+    },
+    {
+      "dev": false,
+      "ecosystem": "PyPI",
+      "exists": true,
+      "flagged": [],
+      "name": "pyodbc",
+      "non_registry_reason": null,
+      "repo": "github.com/mkleehammer/pyodbc",
+      "signals": {
+        "advisories": {
+          "detail": "no advisories recorded",
+          "state": "assessed_clean",
+          "value": []
+        },
+        "archived": {
+          "detail": "repository is active",
+          "state": "assessed_clean",
+          "value": false
+        },
+        "binary_artifacts": {
+          "detail": "the Scorecard API did not answer",
+          "state": "unassessable",
+          "value": null
+        },
+        "code_review": {
+          "detail": "the Scorecard API did not answer",
+          "state": "unassessable",
+          "value": null
+        },
+        "dangerous_workflow": {
+          "detail": "the Scorecard API did not answer",
+          "state": "unassessable",
+          "value": null
+        },
+        "deprecated": {
+          "detail": "release 5.3.0 is not yanked",
+          "state": "assessed_clean",
+          "value": false
+        },
+        "downloads": {
+          "detail": "PyPI's download counters are disabled and return -1",
+          "state": "unassessable",
+          "value": null
+        },
+        "install_script": {
+          "detail": "install-time execution depends on whether a wheel or an sdist is installed, which this collector does not determine",
+          "state": "unassessable",
+          "value": null
+        },
+        "provenance": {
+          "detail": "PyPI publish attestations are not read by this collector",
+          "state": "unassessable",
+          "value": null
+        },
+        "publisher_concentration": {
+          "detail": "PyPI publishes no upload ACL, so who can publish this package is not observable",
+          "state": "unassessable",
+          "value": null
+        },
+        "security_policy": {
+          "detail": "no security policy found",
+          "state": "assessed_clean",
+          "value": false
+        },
+        "staleness": {
+          "detail": "pushed 3 months ago",
+          "state": "assessed_clean",
+          "value": "2026-06-06T22:06:03Z"
+        },
+        "token_permissions": {
+          "detail": "the Scorecard API did not answer",
+          "state": "unassessable",
+          "value": null
+        }
+      },
+      "version": "5.3.0",
+      "version_source": "latest-release"
+    },
+    {
+      "dev": true,
+      "ecosystem": "PyPI",
+      "exists": true,
+      "flagged": [],
+      "name": "pytest",
+      "non_registry_reason": null,
+      "repo": "github.com/pytest-dev/pytest",
+      "signals": {
+        "advisories": {
+          "detail": "no advisories recorded",
+          "state": "assessed_clean",
+          "value": []
+        },
+        "archived": {
+          "detail": "repository is active",
+          "state": "assessed_clean",
+          "value": false
+        },
+        "binary_artifacts": {
+          "detail": "the Scorecard API did not answer",
+          "state": "unassessable",
+          "value": null
+        },
+        "code_review": {
+          "detail": "the Scorecard API did not answer",
+          "state": "unassessable",
+          "value": null
+        },
+        "dangerous_workflow": {
+          "detail": "the Scorecard API did not answer",
+          "state": "unassessable",
+          "value": null
+        },
+        "deprecated": {
+          "detail": "release 9.1.1 is not yanked",
+          "state": "assessed_clean",
+          "value": false
+        },
+        "downloads": {
+          "detail": "PyPI's download counters are disabled and return -1",
+          "state": "unassessable",
+          "value": null
+        },
+        "install_script": {
+          "detail": "install-time execution depends on whether a wheel or an sdist is installed, which this collector does not determine",
+          "state": "unassessable",
+          "value": null
+        },
+        "provenance": {
+          "detail": "PyPI publish attestations are not read by this collector",
+          "state": "unassessable",
+          "value": null
+        },
+        "publisher_concentration": {
+          "detail": "PyPI publishes no upload ACL, so who can publish this package is not observable",
+          "state": "unassessable",
+          "value": null
+        },
+        "security_policy": {
+          "detail": "publishes a security policy",
+          "state": "assessed_clean",
+          "value": true
+        },
+        "staleness": {
+          "detail": "pushed 1 days ago",
+          "state": "assessed_clean",
+          "value": "2026-08-27T19:55:51Z"
+        },
+        "token_permissions": {
+          "detail": "the Scorecard API did not answer",
+          "state": "unassessable",
+          "value": null
+        }
+      },
+      "version": "9.1.1",
+      "version_source": "latest-release"
+    },
+    {
+      "dev": true,
+      "ecosystem": "PyPI",
+      "exists": true,
+      "flagged": [],
+      "name": "pytest-cov",
+      "non_registry_reason": null,
+      "repo": "github.com/pytest-dev/pytest-cov",
+      "signals": {
+        "advisories": {
+          "detail": "no advisories recorded",
+          "state": "assessed_clean",
+          "value": []
+        },
+        "archived": {
+          "detail": "repository is active",
+          "state": "assessed_clean",
+          "value": false
+        },
+        "binary_artifacts": {
+          "detail": "the Scorecard API did not answer",
+          "state": "unassessable",
+          "value": null
+        },
+        "code_review": {
+          "detail": "the Scorecard API did not answer",
+          "state": "unassessable",
+          "value": null
+        },
+        "dangerous_workflow": {
+          "detail": "the Scorecard API did not answer",
+          "state": "unassessable",
+          "value": null
+        },
+        "deprecated": {
+          "detail": "release 7.1.0 is not yanked",
+          "state": "assessed_clean",
+          "value": false
+        },
+        "downloads": {
+          "detail": "PyPI's download counters are disabled and return -1",
+          "state": "unassessable",
+          "value": null
+        },
+        "install_script": {
+          "detail": "install-time execution depends on whether a wheel or an sdist is installed, which this collector does not determine",
+          "state": "unassessable",
+          "value": null
+        },
+        "provenance": {
+          "detail": "PyPI publish attestations are not read by this collector",
+          "state": "unassessable",
+          "value": null
+        },
+        "publisher_concentration": {
+          "detail": "PyPI publishes no upload ACL, so who can publish this package is not observable",
+          "state": "unassessable",
+          "value": null
+        },
+        "security_policy": {
+          "detail": "publishes a security policy",
+          "state": "assessed_clean",
+          "value": true
+        },
+        "staleness": {
+          "detail": "pushed 4 months ago",
+          "state": "assessed_clean",
+          "value": "2026-04-24T21:33:08Z"
+        },
+        "token_permissions": {
+          "detail": "the Scorecard API did not answer",
+          "state": "unassessable",
+          "value": null
+        }
+      },
+      "version": "7.1.0",
+      "version_source": "latest-release"
+    },
+    {
+      "dev": false,
+      "ecosystem": "PyPI",
+      "exists": true,
+      "flagged": [],
+      "name": "python-dotenv",
+      "non_registry_reason": null,
+      "repo": "github.com/theskumar/python-dotenv",
+      "signals": {
+        "advisories": {
+          "detail": "no advisories recorded",
+          "state": "assessed_clean",
+          "value": []
+        },
+        "archived": {
+          "detail": "repository is active",
+          "state": "assessed_clean",
+          "value": false
+        },
+        "binary_artifacts": {
+          "detail": "the Scorecard API did not answer",
+          "state": "unassessable",
+          "value": null
+        },
+        "code_review": {
+          "detail": "the Scorecard API did not answer",
+          "state": "unassessable",
+          "value": null
+        },
+        "dangerous_workflow": {
+          "detail": "the Scorecard API did not answer",
+          "state": "unassessable",
+          "value": null
+        },
+        "deprecated": {
+          "detail": "release 1.2.3 is not yanked",
+          "state": "assessed_clean",
+          "value": false
+        },
+        "downloads": {
+          "detail": "PyPI's download counters are disabled and return -1",
+          "state": "unassessable",
+          "value": null
+        },
+        "install_script": {
+          "detail": "install-time execution depends on whether a wheel or an sdist is installed, which this collector does not determine",
+          "state": "unassessable",
+          "value": null
+        },
+        "provenance": {
+          "detail": "PyPI publish attestations are not read by this collector",
+          "state": "unassessable",
+          "value": null
+        },
+        "publisher_concentration": {
+          "detail": "PyPI publishes no upload ACL, so who can publish this package is not observable",
+          "state": "unassessable",
+          "value": null
+        },
+        "security_policy": {
+          "detail": "publishes a security policy",
+          "state": "assessed_clean",
+          "value": true
+        },
+        "staleness": {
+          "detail": "pushed 5 days ago",
+          "state": "assessed_clean",
+          "value": "2026-08-23T13:32:35Z"
+        },
+        "token_permissions": {
+          "detail": "the Scorecard API did not answer",
+          "state": "unassessable",
+          "value": null
+        }
+      },
+      "version": "1.2.3",
+      "version_source": "latest-release"
+    },
+    {
+      "dev": false,
+      "ecosystem": "PyPI",
+      "exists": true,
+      "flagged": [],
+      "name": "requests",
+      "non_registry_reason": null,
+      "repo": "github.com/psf/requests",
+      "signals": {
+        "advisories": {
+          "detail": "no advisories recorded",
+          "state": "assessed_clean",
+          "value": []
+        },
+        "archived": {
+          "detail": "repository is active",
+          "state": "assessed_clean",
+          "value": false
+        },
+        "binary_artifacts": {
+          "detail": "the Scorecard API did not answer",
+          "state": "unassessable",
+          "value": null
+        },
+        "code_review": {
+          "detail": "the Scorecard API did not answer",
+          "state": "unassessable",
+          "value": null
+        },
+        "dangerous_workflow": {
+          "detail": "the Scorecard API did not answer",
+          "state": "unassessable",
+          "value": null
+        },
+        "deprecated": {
+          "detail": "release 2.34.2 is not yanked",
+          "state": "assessed_clean",
+          "value": false
+        },
+        "downloads": {
+          "detail": "PyPI's download counters are disabled and return -1",
+          "state": "unassessable",
+          "value": null
+        },
+        "install_script": {
+          "detail": "install-time execution depends on whether a wheel or an sdist is installed, which this collector does not determine",
+          "state": "unassessable",
+          "value": null
+        },
+        "provenance": {
+          "detail": "PyPI publish attestations are not read by this collector",
+          "state": "unassessable",
+          "value": null
+        },
+        "publisher_concentration": {
+          "detail": "PyPI publishes no upload ACL, so who can publish this package is not observable",
+          "state": "unassessable",
+          "value": null
+        },
+        "security_policy": {
+          "detail": "publishes a security policy",
+          "state": "assessed_clean",
+          "value": true
+        },
+        "staleness": {
+          "detail": "pushed 4 days ago",
+          "state": "assessed_clean",
+          "value": "2026-08-25T00:45:59Z"
+        },
+        "token_permissions": {
+          "detail": "the Scorecard API did not answer",
+          "state": "unassessable",
+          "value": null
+        }
+      },
+      "version": "2.34.2",
+      "version_source": "latest-release"
+    },
+    {
+      "dev": true,
+      "ecosystem": "PyPI",
+      "exists": true,
+      "flagged": [],
+      "name": "ruff",
+      "non_registry_reason": null,
+      "repo": "github.com/astral-sh/ruff",
+      "signals": {
+        "advisories": {
+          "detail": "no advisories recorded",
+          "state": "assessed_clean",
+          "value": []
+        },
+        "archived": {
+          "detail": "repository is active",
+          "state": "assessed_clean",
+          "value": false
+        },
+        "binary_artifacts": {
+          "detail": "the Scorecard API did not answer",
+          "state": "unassessable",
+          "value": null
+        },
+        "code_review": {
+          "detail": "the Scorecard API did not answer",
+          "state": "unassessable",
+          "value": null
+        },
+        "dangerous_workflow": {
+          "detail": "the Scorecard API did not answer",
+          "state": "unassessable",
+          "value": null
+        },
+        "deprecated": {
+          "detail": "release 0.16.5 is not yanked",
+          "state": "assessed_clean",
+          "value": false
+        },
+        "downloads": {
+          "detail": "PyPI's download counters are disabled and return -1",
+          "state": "unassessable",
+          "value": null
+        },
+        "install_script": {
+          "detail": "install-time execution depends on whether a wheel or an sdist is installed, which this collector does not determine",
+          "state": "unassessable",
+          "value": null
+        },
+        "provenance": {
+          "detail": "PyPI publish attestations are not read by this collector",
+          "state": "unassessable",
+          "value": null
+        },
+        "publisher_concentration": {
+          "detail": "PyPI publishes no upload ACL, so who can publish this package is not observable",
+          "state": "unassessable",
+          "value": null
+        },
+        "security_policy": {
+          "detail": "publishes a security policy",
+          "state": "assessed_clean",
+          "value": true
+        },
+        "staleness": {
+          "detail": "pushed 0 days ago",
+          "state": "assessed_clean",
+          "value": "2026-08-29T10:12:21Z"
+        },
+        "token_permissions": {
+          "detail": "the Scorecard API did not answer",
+          "state": "unassessable",
+          "value": null
+        }
+      },
+      "version": "0.16.5",
+      "version_source": "latest-release"
+    },
+    {
+      "dev": false,
+      "ecosystem": "PyPI",
+      "exists": true,
+      "flagged": [],
+      "name": "typer",
+      "non_registry_reason": null,
+      "repo": "github.com/fastapi/typer",
+      "signals": {
+        "advisories": {
+          "detail": "no advisories recorded",
+          "state": "assessed_clean",
+          "value": []
+        },
+        "archived": {
+          "detail": "repository is active",
+          "state": "assessed_clean",
+          "value": false
+        },
+        "binary_artifacts": {
+          "detail": "the Scorecard API did not answer",
+          "state": "unassessable",
+          "value": null
+        },
+        "code_review": {
+          "detail": "the Scorecard API did not answer",
+          "state": "unassessable",
+          "value": null
+        },
+        "dangerous_workflow": {
+          "detail": "the Scorecard API did not answer",
+          "state": "unassessable",
+          "value": null
+        },
+        "deprecated": {
+          "detail": "release 0.27.2 is not yanked",
+          "state": "assessed_clean",
+          "value": false
+        },
+        "downloads": {
+          "detail": "PyPI's download counters are disabled and return -1",
+          "state": "unassessable",
+          "value": null
+        },
+        "install_script": {
+          "detail": "install-time execution depends on whether a wheel or an sdist is installed, which this collector does not determine",
+          "state": "unassessable",
+          "value": null
+        },
+        "provenance": {
+          "detail": "PyPI publish attestations are not read by this collector",
+          "state": "unassessable",
+          "value": null
+        },
+        "publisher_concentration": {
+          "detail": "PyPI publishes no upload ACL, so who can publish this package is not observable",
+          "state": "unassessable",
+          "value": null
+        },
+        "security_policy": {
+          "detail": "publishes a security policy",
+          "state": "assessed_clean",
+          "value": true
+        },
+        "staleness": {
+          "detail": "pushed 0 days ago",
+          "state": "assessed_clean",
+          "value": "2026-08-28T10:26:37Z"
+        },
+        "token_permissions": {
+          "detail": "the Scorecard API did not answer",
+          "state": "unassessable",
+          "value": null
+        }
+      },
+      "version": "0.27.2",
+      "version_source": "latest-release"
+    },
+    {
+      "dev": true,
+      "ecosystem": "PyPI",
+      "exists": true,
+      "flagged": [],
+      "name": "types-requests",
+      "non_registry_reason": null,
+      "repo": "github.com/python/typeshed",
+      "signals": {
+        "advisories": {
+          "detail": "no advisories recorded",
+          "state": "assessed_clean",
+          "value": []
+        },
+        "archived": {
+          "detail": "repository is active",
+          "state": "assessed_clean",
+          "value": false
+        },
+        "binary_artifacts": {
+          "detail": "the Scorecard API did not answer",
+          "state": "unassessable",
+          "value": null
+        },
+        "code_review": {
+          "detail": "the Scorecard API did not answer",
+          "state": "unassessable",
+          "value": null
+        },
+        "dangerous_workflow": {
+          "detail": "the Scorecard API did not answer",
+          "state": "unassessable",
+          "value": null
+        },
+        "deprecated": {
+          "detail": "release 2.33.0.20260712 is not yanked",
+          "state": "assessed_clean",
+          "value": false
+        },
+        "downloads": {
+          "detail": "PyPI's download counters are disabled and return -1",
+          "state": "unassessable",
+          "value": null
+        },
+        "install_script": {
+          "detail": "install-time execution depends on whether a wheel or an sdist is installed, which this collector does not determine",
+          "state": "unassessable",
+          "value": null
+        },
+        "provenance": {
+          "detail": "PyPI publish attestations are not read by this collector",
+          "state": "unassessable",
+          "value": null
+        },
+        "publisher_concentration": {
+          "detail": "PyPI publishes no upload ACL, so who can publish this package is not observable",
+          "state": "unassessable",
+          "value": null
+        },
+        "security_policy": {
+          "detail": "publishes a security policy",
+          "state": "assessed_clean",
+          "value": true
+        },
+        "staleness": {
+          "detail": "pushed 0 days ago",
+          "state": "assessed_clean",
+          "value": "2026-08-29T08:05:58Z"
+        },
+        "token_permissions": {
+          "detail": "the Scorecard API did not answer",
+          "state": "unassessable",
+          "value": null
+        }
+      },
+      "version": "2.33.0.20260712",
+      "version_source": "latest-release"
+    }
+  ],
+  "ecosystems": {
+    "PyPI": 10
+  },
+  "notes": [
+    "cache directory ownership was not verified: os.getuid is POSIX-only, so a cache at C:\\Users\\thoma\\AppData\\Local\\Temp\\supply-chain-risk-auditor-cache owned by another user would not be detected on this platform. Keep the cache under your own user profile, or pass --cache with a private path.",
+    "10 dependencies are specified as a version range with no lockfile, so their advisories were matched against the current latest release rather than against what this project installs \u2014 commit a lockfile for an exact answer: mypy, pydantic, pyodbc, pytest, pytest-cov, python-dotenv, requests, ruff ...",
+    "Optional tooling detected: npm. Not installed, so not used: bundler-audit, cargo-audit, osv-scanner, pip-audit.",
+    "Direct dependencies only. Advisories attach to the package that ships the affected code, so an umbrella package can look clean while its components are not \u2014 rails 5.0.0 reports 0 advisories where actionpack 5.0.0 reports 10. Transitive dependencies were not examined: no lockfile resolves the transitive tree (package-lock.json, uv.lock, or a go 1.17+ go.mod).",
+    "HTTP sources: 31 fetched, 10 served from cache (oldest 0.0h old), 0 refetched as stale, 0 unavailable offline, 10 errors."
+  ],
+  "scan": {
+    "commit": "b2f3f274748b",
+    "manifests": [
+      "pyproject.toml"
+    ],
+    "path": ".",
+    "scanned_at": "2026-08-29T10:22:25+00:00",
+    "subject": "eu-port-analytics"
+  },
+  "target": ".",
+  "transitive": {
+    "checked": 0,
+    "examined": false,
+    "excluded_direct": 0,
+    "flagged": [],
+    "lockfile_entries": 0,
+    "reason": "no lockfile resolves the transitive tree (package-lock.json, uv.lock, or a go 1.17+ go.mod)",
+    "sources": [],
+    "total": 0,
+    "unverifiable": []
+  }
+}
