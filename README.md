@@ -1,6 +1,9 @@
 # Northern Range Port Analytics
 
 [![CI](https://github.com/Bergstefann/northern-range-analytics/actions/workflows/ci.yml/badge.svg)](https://github.com/Bergstefann/northern-range-analytics/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+![Antwerp-Bruges: two legacy series become one — Antwerpen and Zeebrugge report separately through 2021, the merged authority reports from 2022, and the pre-2022 combined series is derived by summation](docs/images/antwerp-bruges-merger-timeline.png)
 
 A pipeline against real EU government maritime statistics. How does the Port of
 Antwerp-Bruges compare to its Northern Range rivals (Rotterdam, Hamburg, Zeebrugge,
@@ -26,86 +29,6 @@ external system instead of three. `ingest/eurostat_client.py` takes an injectabl
 session, and that's the only seam this project needs.
 
 Single entrypoint, `port-analytics`, runs all three stages.
-
-## Data model
-
-```mermaid
-erDiagram
-    ports ||--o{ port_throughput : port_id
-    cargo_types ||--o{ port_throughput : cargo_type_id
-    ports ||--o{ data_quality_flags : port_id
-    port_throughput ||--o{ data_quality_flags : throughput_id
-    ports ||--o{ ports : merged_into_port_id
-
-    ports {
-        int port_id PK
-        nvarchar port_name
-        char country_code
-        char un_locode "nullable, not sourced from Eurostat"
-        nvarchar eurostat_code
-        int merged_into_port_id FK "nullable, self-referencing"
-    }
-    cargo_types {
-        int cargo_type_id PK
-        nvarchar cargo_type_name
-        nvarchar cargo_type_code
-    }
-    port_throughput {
-        int throughput_id PK
-        int port_id FK
-        int cargo_type_id FK
-        smallint year
-        nvarchar direction "total / inbound / outbound"
-        decimal gross_weight_tonnes
-        nvarchar source "dataset code, or derived_sum:..."
-        datetime2 ingested_at
-    }
-    data_quality_flags {
-        int flag_id PK
-        int throughput_id FK "nullable -- some flags are about missing rows"
-        int port_id FK "nullable"
-        nvarchar flag_type
-        nvarchar description
-        nvarchar resolution
-        datetime2 created_at
-    }
-```
-
-Genuinely relational, per the build spec. Not one wide flat table. `port_throughput`'s
-grain is (port, cargo_type, year, direction): a `cargo_type_code = 'TOTAL'` row per
-direction from the direction dataset, plus one row per real cargo-type breakdown at
-`direction = 'total'` from the cargo dataset. See `docs/power-bi-measures.md` for why that
-grain matters. Summing across it without filtering silently overcounts.
-
-## Try it
-
-```
-python -m venv .venv && .venv/Scripts/activate   # or source .venv/bin/activate
-pip install -e . ruff mypy pytest pytest-cov types-requests
-cp .env.example .env   # fill in the real Azure SQL credentials
-port-analytics
-```
-
-Requires the [Microsoft ODBC Driver 18 for SQL Server](https://learn.microsoft.com/en-us/sql/connect/odbc/download-odbc-driver-for-sql-server)
-installed locally (`pyodbc` links against it). CI installs `unixodbc` on Linux for the
-same reason.
-
-Real output from the last verified run:
-
-```
-Pulling raw data from Eurostat...
-  landed data\raw\mar_mg_aa_pwhd_20260819T091355Z.json
-  landed data\raw\mar_mg_am_pwhc_20260819T091356Z.json
-Transforming...
-  1013 throughput rows, 4 data-quality flags
-Loading into Azure SQL...
-Loaded: 6 ports, 7 cargo types, 1013 throughput rows, 4 flags (0 revisions detected this run).
-```
-
-Run it again and the counts don't move. Every `MERGE` upserts on a natural key, so a
-re-run is a no-op unless Eurostat actually changed something. Confirmed directly against
-the database, not just inferred from the CLI's own summary: `ports` 6, `cargo_types` 7,
-`port_throughput` 1,013, `data_quality_flags` 4, identical across two consecutive runs.
 
 ## Data quality
 
@@ -190,8 +113,6 @@ timeline
     2005–2021 : Pre-2022 series derived by summing Antwerpen + Zeebrugge (derived_sum flag)
 ```
 
-![Antwerp-Bruges: two legacy series become one — Antwerpen and Zeebrugge report separately through 2021, the merged authority reports from 2022, and the pre-2022 combined series is derived by summation](docs/images/antwerp-bruges-merger-timeline.png)
-
 **Decision: keep both views, explicitly, every derived row flagged.** The raw Antwerpen and
 Zeebrugge rows are kept untouched under their own port codes, sourced from the real Eurostat
 datasets. In addition, a continuous pre-2022 Antwerp-Bruges series is derived by summing the
@@ -245,6 +166,8 @@ special-casing pre/post-2022 in DAX at all. See `docs/power-bi-measures.md`.
 Full investigation notes, including the JSON-stat index math and every design decision behind
 the transform, are in `docs/data-quality-notes.md`.
 
+![Data quality findings — five row-level findings from the live-API investigation (port merger, phantom UNK cargo, Hamburg RO_MNSP cutoff, no confidentiality flag, inconsistent units) plus two schema-level Phase 3 items below the line (thousand-tonnes scale bug, revised-estimate loop closure)](docs/images/data-quality-findings-matrix.png)
+
 ### Numbers, verified against the real run
 
 53 tests passing, 85% overall line coverage, 100% on every network-free layer (JSON-stat
@@ -254,6 +177,86 @@ Testing, below). 1,013 `port_throughput` rows and 4 `data_quality_flags` rows (1
 `code_change`, 3 `port_merger`) loaded into the live Azure SQL database, spanning 2005–2024
 for 6 ports and 7 cargo types. Idempotency confirmed by running the full pipeline twice and
 checking row counts directly in the database, identical both times.
+
+## Try it
+
+```
+python -m venv .venv && .venv/Scripts/activate   # or source .venv/bin/activate
+pip install -e . ruff mypy pytest pytest-cov types-requests
+cp .env.example .env   # fill in the real Azure SQL credentials
+port-analytics
+```
+
+Requires the [Microsoft ODBC Driver 18 for SQL Server](https://learn.microsoft.com/en-us/sql/connect/odbc/download-odbc-driver-for-sql-server)
+installed locally (`pyodbc` links against it). CI installs `unixodbc` on Linux for the
+same reason.
+
+Real output from the last verified run:
+
+```
+Pulling raw data from Eurostat...
+  landed data\raw\mar_mg_aa_pwhd_20260819T091355Z.json
+  landed data\raw\mar_mg_am_pwhc_20260819T091356Z.json
+Transforming...
+  1013 throughput rows, 4 data-quality flags
+Loading into Azure SQL...
+Loaded: 6 ports, 7 cargo types, 1013 throughput rows, 4 flags (0 revisions detected this run).
+```
+
+Run it again and the counts don't move. Every `MERGE` upserts on a natural key, so a
+re-run is a no-op unless Eurostat actually changed something. Confirmed directly against
+the database, not just inferred from the CLI's own summary: `ports` 6, `cargo_types` 7,
+`port_throughput` 1,013, `data_quality_flags` 4, identical across two consecutive runs.
+
+## Data model
+
+```mermaid
+erDiagram
+    ports ||--o{ port_throughput : port_id
+    cargo_types ||--o{ port_throughput : cargo_type_id
+    ports ||--o{ data_quality_flags : port_id
+    port_throughput ||--o{ data_quality_flags : throughput_id
+    ports ||--o{ ports : merged_into_port_id
+
+    ports {
+        int port_id PK
+        nvarchar port_name
+        char country_code
+        char un_locode "nullable, not sourced from Eurostat"
+        nvarchar eurostat_code
+        int merged_into_port_id FK "nullable, self-referencing"
+    }
+    cargo_types {
+        int cargo_type_id PK
+        nvarchar cargo_type_name
+        nvarchar cargo_type_code
+    }
+    port_throughput {
+        int throughput_id PK
+        int port_id FK
+        int cargo_type_id FK
+        smallint year
+        nvarchar direction "total / inbound / outbound"
+        decimal gross_weight_tonnes
+        nvarchar source "dataset code, or derived_sum:..."
+        datetime2 ingested_at
+    }
+    data_quality_flags {
+        int flag_id PK
+        int throughput_id FK "nullable -- some flags are about missing rows"
+        int port_id FK "nullable"
+        nvarchar flag_type
+        nvarchar description
+        nvarchar resolution
+        datetime2 created_at
+    }
+```
+
+Genuinely relational, per the build spec. Not one wide flat table. `port_throughput`'s
+grain is (port, cargo_type, year, direction): a `cargo_type_code = 'TOTAL'` row per
+direction from the direction dataset, plus one row per real cargo-type breakdown at
+`direction = 'total'` from the cargo dataset. See `docs/power-bi-measures.md` for why that
+grain matters. Summing across it without filtering silently overcounts.
 
 ## Power BI
 
@@ -337,37 +340,6 @@ cluster. Together containers and liquid bulk account for nearly 80% of all tonna
 remainder split across Ro-Ro non-self-propelled (19.0M), dry bulk (14.6M), other (10.0M), and
 Ro-Ro self-propelled (5.5M).
 
-## Design decisions
-
-- **A synthetic `Total` cargo type**, beyond the five example types the spec listed
-  (containers, dry bulk, liquid bulk, ro-ro, other). `mar_mg_aa_pwhd` has no cargo breakdown
-  at all. Every row is all cargo combined, and `cargo_type_id` needed something to reference.
-  A nullable `cargo_type_id` was rejected (the spec marks only `merged_into_port_id` as
-  nullable) in favour of a required FK, keeping downstream queries simpler.
-- **`mar_mg_am_pwhc`'s own internal `cargo='TOTAL'` category isn't loaded.** Only its six
-  real breakdown categories are. `mar_mg_aa_pwhd` is the sole source of
-  `cargo_type_code='TOTAL'` rows, avoiding two independently-sourced "total" figures for the
-  same port/year with no reconciliation logic between them.
-- **Import mode, not DirectQuery**, for Power BI. ~1,000 rows is comfortably small to import,
-  and Import mode means the report doesn't depend on the free-tier database staying awake (it
-  auto-pauses when idle) while someone's viewing it.
-- **SQL authentication, not Azure AD**, for the database, matching PortYard's existing
-  pattern in the same subscription rather than introducing a second auth model for one
-  project.
-- **A new resource group and logical server** (`rg-northern-range-analytics`,
-  `northern-range-sql-server`), not `rg-portyard`. A logical SQL server carries no cost of
-  its own, since only databases are billed, so a dedicated server costs nothing extra and
-  keeps this project's resources cleanly separable from PortYard's for cost tracking and
-  teardown. $0/month: the Azure SQL free offer covers up to 10 databases per subscription
-  (this is the 2nd), each auto-pausing rather than billing if its monthly allowance is
-  exceeded.
-- **Ports-and-adapters, scaled down.** One external system (Eurostat) instead of Invoicer's
-  three, so one injectable seam (`HttpGetter` in `ingest/eurostat_client.py`) instead of a
-  Protocol per integration. The load layer's SQL generation (`load/upsert.py`) is separated
-  from the connection it runs against (`load/connection.py`, `load/loader.py`) for the same
-  reason: the part with real logic is unit-testable, and the part that's just wiring isn't
-  over-tested for its own sake.
-
 ## Testing
 
 ```
@@ -406,3 +378,38 @@ the real, repeated runs against the live Azure SQL database documented above, no
 - `tests/integration/test_pull_and_land.py`, `tests/integration/test_pipeline_transform.py`:
   end-to-end wiring with self-contained fixtures, no network and no dependency on
   locally-landed raw files
+
+## Design decisions
+
+- **A synthetic `Total` cargo type**, beyond the five example types the spec listed
+  (containers, dry bulk, liquid bulk, ro-ro, other). `mar_mg_aa_pwhd` has no cargo breakdown
+  at all. Every row is all cargo combined, and `cargo_type_id` needed something to reference.
+  A nullable `cargo_type_id` was rejected (the spec marks only `merged_into_port_id` as
+  nullable) in favour of a required FK, keeping downstream queries simpler.
+- **`mar_mg_am_pwhc`'s own internal `cargo='TOTAL'` category isn't loaded.** Only its six
+  real breakdown categories are. `mar_mg_aa_pwhd` is the sole source of
+  `cargo_type_code='TOTAL'` rows, avoiding two independently-sourced "total" figures for the
+  same port/year with no reconciliation logic between them.
+- **Import mode, not DirectQuery**, for Power BI. ~1,000 rows is comfortably small to import,
+  and Import mode means the report doesn't depend on the free-tier database staying awake (it
+  auto-pauses when idle) while someone's viewing it.
+- **SQL authentication, not Azure AD**, for the database, matching PortYard's existing
+  pattern in the same subscription rather than introducing a second auth model for one
+  project.
+- **A new resource group and logical server** (`rg-northern-range-analytics`,
+  `northern-range-sql-server`), not `rg-portyard`. A logical SQL server carries no cost of
+  its own, since only databases are billed, so a dedicated server costs nothing extra and
+  keeps this project's resources cleanly separable from PortYard's for cost tracking and
+  teardown. $0/month: the Azure SQL free offer covers up to 10 databases per subscription
+  (this is the 2nd), each auto-pausing rather than billing if its monthly allowance is
+  exceeded.
+- **Ports-and-adapters, scaled down.** One external system (Eurostat) instead of Invoicer's
+  three, so one injectable seam (`HttpGetter` in `ingest/eurostat_client.py`) instead of a
+  Protocol per integration. The load layer's SQL generation (`load/upsert.py`) is separated
+  from the connection it runs against (`load/connection.py`, `load/loader.py`) for the same
+  reason: the part with real logic is unit-testable, and the part that's just wiring isn't
+  over-tested for its own sake.
+
+## License
+
+[MIT](LICENSE)
