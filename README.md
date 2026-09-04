@@ -3,8 +3,6 @@
 [![CI](https://github.com/Bergstefann/northern-range-analytics/actions/workflows/ci.yml/badge.svg)](https://github.com/Bergstefann/northern-range-analytics/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-![Antwerp-Bruges: two legacy series become one — Antwerpen and Zeebrugge report separately through 2021, the merged authority reports from 2022, and the pre-2022 combined series is derived by summation](docs/images/antwerp-bruges-merger-timeline.png)
-
 A pipeline against real EU government maritime statistics. How does the Port of
 Antwerp-Bruges compare to its Northern Range rivals (Rotterdam, Hamburg, Zeebrugge,
 Gdansk) on throughput, and what's driving the trend? Eurostat → Python → Azure SQL →
@@ -104,14 +102,7 @@ separately through 2021 (confirmed directly: both present every year 2005–2021
 year 2022–2024), and the merged entity reports from 2022, with a clean cutover and no
 overlap year.
 
-```mermaid
-timeline
-    title Antwerp-Bruges: two legacy series become one
-    2005–2021 : Antwerpen and Zeebrugge report separately (real Eurostat rows, kept as-is)
-    2021 : Final independent year for either legacy port
-    2022 : Merged Antwerp-Bruges reports as one authority — clean cutover, no overlap
-    2005–2021 : Pre-2022 series derived by summing Antwerpen + Zeebrugge (derived_sum flag)
-```
+![Antwerp-Bruges: two legacy series become one — Antwerpen and Zeebrugge report separately through 2021, the merged authority reports from 2022, and the pre-2022 combined series is derived by summation](docs/images/antwerp-bruges-merger-timeline.png)
 
 **Decision: keep both views, explicitly, every derived row flagged.** The raw Antwerpen and
 Zeebrugge rows are kept untouched under their own port codes, sourced from the real Eurostat
